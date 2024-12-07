@@ -34,7 +34,7 @@ google-calendar-event-scheduler/
 ```
 
 ## Pre-requisites
-* Python 3.12
+* Python 3.6 or above
 * A Google Cloud project with Google Calendar API and OAuth credentials.
 * Virtual environment (venv)
 
@@ -46,7 +46,7 @@ Authorized redirect URIs should match the one used in the .env file.
 4. Download the OAuth client credentials and place them in your .env file.
 
 ## Environment Variables
-* Create a *.env* file in the root directory with the following contents same as *.env.example* file:
+* Create a *.env* file in the root directory
 
 ```commandline
 GOOGLE_CLIENT_ID=your-client-id
@@ -67,7 +67,7 @@ cd google-calendar-event-scheduler
 
 ```commandline
 python3 -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+venv\Scripts\activate
 ```
 
 ### **Install dependencies:**
@@ -134,6 +134,3 @@ Description: Creates a new event in the user's Google Calendar.
 }
 ```
 **Open *http://127.0.0.1:8000/docs* to test endpoints with swagger.**
-
-## License
-This project is licensed under the *MIT License*. See the LICENSE file for details.
