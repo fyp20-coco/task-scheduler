@@ -7,6 +7,9 @@ class Chunk(BaseModel):
     description: str
     start_time: datetime
     end_time: datetime
+    
+    class Config:
+        orm_mode = True 
 
 class Task(BaseModel):
     priority: str
@@ -19,5 +22,5 @@ class ChunkIndices(BaseModel):
 class TaskResponse(BaseModel):
     id: int
     priority: str
-    deadline: datetime
+    deadline: str
     chunks: List[Chunk]
