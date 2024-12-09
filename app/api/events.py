@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from app.models.event import Event
-from app.services.calendar import get_calendar_service
+from app.services.calendar_service import get_calendar_service
 
 router = APIRouter()
 
