@@ -11,7 +11,7 @@ from googleapiclient.errors import HttpError
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 
 
-def main():
+def get_event(limit):
   """Shows basic usage of the Google Calendar API.
   Prints the start and name of the next 10 events on the user's calendar.
   """
@@ -45,7 +45,7 @@ def main():
         .list(
             calendarId="primary",
             timeMin=now,
-            maxResults=10,
+            maxResults=limit,
             singleEvents=True,
             orderBy="startTime",
         )
@@ -65,6 +65,36 @@ def main():
   except HttpError as error:
     print(f"An error occurred: {error}")
 
+def create_event(event):
+  """Shows basic usage of the Google Calendar API.
+  Prints the start and name of the next 10 events on the user's calendar.
+  """
+  creds = None
+  # The file token.json stores the user's access and refresh tokens, and is
+  # created automatically when the authorization flow completes for the first
+  # time.
+  if os.path.exists("token.json"):
+    creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+  # If there are no (valid) credentials available, let the user log in.
+  if not creds or not creds.valid:
+    if creds and creds.expired and creds.refresh_token:
+      creds.refresh(Request())
+    else:
+      flow = InstalledAppFlow.from_client_secrets_file(
+          "credentials.json", SCOPES
+      )
+      creds = flow.run_local_server(port=0)
+    # Save the credentials for the next run
+    with open("token.json", "w") as token:
+      token.write(creds.to_json())
 
-if __name__ == "__main__":
-  main()
+  try:
+    service = build("calendar", "v3", credentials=creds)
+
+    event = service.events().insert(calendarId='primary', body=event).execute()
+
+    print(f"Event created: {event.get('htmlLink')}")
+
+  except HttpError as error:
+    print(f"An error occurred: {error}")
+
