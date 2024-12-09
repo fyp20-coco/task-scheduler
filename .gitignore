@@ -2,7 +2,7 @@
 .ipynb_checkpoints
 .mypy_cache
 .vscode
-__pycache__
+__pycache__ 
 .pytest_cache
 htmlcov
 dist
@@ -17,7 +17,7 @@ env3.*
 env
 docs_build
 site_build
-venv
+tsenv
 docs.zip
 archive.zip
 

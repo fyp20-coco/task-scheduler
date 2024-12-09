@@ -1,7 +1,9 @@
 from fastapi import FastAPI
-from app.api import auth, events
+from app.api import auth,events,chunk,task
 
 app = FastAPI()
 
 app.include_router(auth.router, prefix='/auth', tags=['Auth'])
 app.include_router(events.router, prefix='/calendar', tags=['Calendar Events'])
+app.include_router(chunk.router, prefix='/chunks', tags=['Chunks'])
+app.include_router(task.router, prefix='/tasks', tags=['Tasks'])
