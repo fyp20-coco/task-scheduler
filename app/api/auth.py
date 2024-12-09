@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
 from fastapi import Query
 from app.core.auth_flow import get_google_flow
-from app.services.calendar import user_creds
+from app.services.calendar_service import user_creds
 
 router = APIRouter()
 
