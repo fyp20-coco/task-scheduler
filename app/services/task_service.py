@@ -2,6 +2,8 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.models.db_models import ChunkDB, TaskDB
 from app.models.schemas import Chunk, Task
+from quickstart import create_event
+
 
 def add_task_to_db(db: Session, task: Task):
     try:
@@ -14,12 +16,19 @@ def add_task_to_db(db: Session, task: Task):
         # Add chunks to the task
         chunk_models = []
         for chunk in task.chunks:
+            event_id=create_event(chunk.start_time, chunk.end_time, chunk.description,chunk.summary)
+
+
+
+
             new_chunk = ChunkDB(
                 task_id=new_task.id,
                 index=chunk.index,
                 description=chunk.description,
                 start_time=chunk.start_time,
                 end_time=chunk.end_time,
+                event_id=event_id,
+                summary=chunk.summary,
             )
             db.add(new_chunk)
             db.commit()
@@ -65,3 +74,9 @@ def get_top_task_from_db(db: Session):
             for chunk in task.chunks
         ]
     }
+ 
+
+
+
+
+
