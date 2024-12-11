@@ -34,3 +34,5 @@ urllib3==2.2.3
 uvicorn==0.30.6
 openai==1.56.1
 httpx==0.27.2
+paddlepaddle
+paddleocr
