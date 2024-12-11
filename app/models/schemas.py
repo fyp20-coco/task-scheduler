@@ -7,6 +7,7 @@ class Chunk(BaseModel):
     description: str
     start_time: datetime
     end_time: datetime
+    summary: str
     
     class Config:
         orm_mode = True 

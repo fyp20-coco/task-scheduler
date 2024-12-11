@@ -19,3 +19,5 @@ class ChunkDB(Base):
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime, nullable=False)
     task = relationship("TaskDB", back_populates="chunks")
+    event_id=Column(String, nullable=False)
+    summary = Column(Text, nullable=False)
