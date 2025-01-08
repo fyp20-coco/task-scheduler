@@ -36,3 +36,9 @@ openai==1.56.1
 httpx==0.27.2
 paddlepaddle
 paddleocr
+fastapi[all]
+python-jose[cryptography]
+passlib
+python-dotenv
+bcrypt==3.2.0
+

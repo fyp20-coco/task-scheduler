@@ -1,23 +1,25 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import RedirectResponse
 from fastapi import Query
-from app.core.auth_flow import get_google_flow
-from app.services.calendar import user_creds
+from fastapi.security import OAuth2PasswordRequestForm
+from app.services.auth import authenticate_user, create_access_token, add_user
+from app.models.db_models import Token, User
+from datetime import timedelta
 
 router = APIRouter()
 
 
-@router.get("/login")
-def login():
-    flow = get_google_flow()
-    authorization_url, state = flow.authorization_url(access_type='offline', include_granted_scopes='true')
-    return RedirectResponse(url=authorization_url)
 
+@router.post("/signup", status_code=201)
+def signup(user: User):
+    if not add_user(user.username, user.password):
+        raise HTTPException(status_code=400, detail="User already exists")
+    return {"msg": "User created successfully"}
 
-@router.get("/redirect")
-async def auth_redirect(code: str = Query(...)):
-    flow = get_google_flow()
-    flow.fetch_token(code=code)
-    credentials = flow.credentials
-    user_creds['token'] = credentials.to_json()
-    return {"message": "Authentication successful", "token": credentials.token}
+@router.post("/signin", response_model=Token)
+def signin(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    access_token = create_access_token(data={"sub": user["username"]}, expires_delta=timedelta(minutes=30))
+    return {"access_token": access_token, "token_type": "bearer"}

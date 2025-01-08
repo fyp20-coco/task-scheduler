@@ -8,3 +8,5 @@ app.include_router(auth.router, prefix='/auth', tags=['Auth'])
 app.include_router(chunk.router, prefix='/chunks', tags=['Chunks'])
 app.include_router(task.router, prefix='/tasks', tags=['Tasks'])
 app.include_router(calendar.router, prefix="/calendar", tags=["calendar"])
+
+
