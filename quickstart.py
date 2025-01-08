@@ -11,14 +11,14 @@ from googleapiclient.errors import HttpError
 
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
+SCOPES = ["https://www.googleapis.com/auth/calendar.events","https://www.googleapis.com/auth/calendar"]
 
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 import os
 
 def get_service():
-    SCOPES = ["https://www.googleapis.com/auth/calendar"]
+    # SCOPES = ["https://www.googleapis.com/auth/calendar"]
     creds = None
 
     # Check for token.json file to use existing credentials
@@ -103,7 +103,7 @@ def get_event(limit):
     print(f"An error occurred: {error}")
 
 def delete_event(event_id):
-  SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
+  # SCOPES = ["https://www.googleapis.com/auth/calendar.events"]
   """Shows basic usage of the Google Calendar API.
   Prints the start and name of the next 10 events on the user's calendar.
   """
@@ -174,21 +174,34 @@ def delete_event(event_id):
 #     print(f"An error occurred: {error}")
 
 
-def create_event(start_time, end_time, description,summary, calendar_id="primary"):
+def create_event(start_time, end_time, description, summary, calendar_id="primary"):
     """
     Creates a Google Calendar event.
-
-    Args:
-        start_time (str or datetime): The start time of the event (ISO 8601 format or datetime object).
-        end_time (str or datetime): The end time of the event (ISO 8601 format or datetime object).
-        description (str): The description of the event.
-        calendar_id (str): The ID of the calendar to create the event in (default: 'primary').
-
-    Returns:
-        dict: The created event's details.
     """
+    from google_auth_oauthlib.flow import InstalledAppFlow
+    from google.auth.transport.requests import Request
+    import os
+
     SCOPES = ["https://www.googleapis.com/auth/calendar"]
-    creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    creds = None
+
+    # Check for token.json
+    if os.path.exists("token.json"):
+        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+
+    # If token.json is missing or invalid, prompt the user to log in
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file("app/services/credentials.json", SCOPES)
+            creds = flow.run_local_server(port=0)
+
+        # Save the credentials for future use
+        with open("token.json", "w") as token_file:
+            token_file.write(creds.to_json())
+
+    # Initialize the Google Calendar service
     service = build("calendar", "v3", credentials=creds)
 
     # Ensure start_time and end_time are ISO 8601 strings
@@ -200,27 +213,22 @@ def create_event(start_time, end_time, description,summary, calendar_id="primary
     event_data = {
         "summary": summary,
         "description": description,
-        "start": {
-            "dateTime": start_time,
-            "timeZone": "Asia/Colombo",
-        },
-        "end": {
-            "dateTime": end_time,
-            "timeZone": "Asia/Colombo",
-        },
+        "start": {"dateTime": start_time, "timeZone": "Asia/Colombo"},
+        "end": {"dateTime": end_time, "timeZone": "Asia/Colombo"},
     }
 
     try:
         event = service.events().insert(calendarId=calendar_id, body=event_data).execute()
         print(f"Event created: {event.get('id')}")
-        return event.get('id')
+        return event.get("id")
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
 
+
 def main():
   
-  # get_event(10)
+  get_event(10)
   # create_event({
   #   'summary': 'Google I/O 2022',
   #   'location': '800 Howard St., San Francisco, CA 94103',
@@ -239,7 +247,6 @@ def main():
   # })  
   
 
-  delete_event(event_id) 
   # service = get_service()
   
   # calendar_list = service.calendarList().list().execute()

@@ -8,14 +8,17 @@ class Chunk(BaseModel):
     start_time: datetime
     end_time: datetime
     summary: str
-    
+
     class Config:
-        orm_mode = True 
+        from_attributes = True  # For Pydantic v2 compatibility
 
 class Task(BaseModel):
     priority: str
     deadline: datetime
     chunks: List[Chunk]
+
+    class Config:
+        from_attributes = True  # For Pydantic v2 compatibility
 
 class ChunkIndices(BaseModel):
     chunk_indices: List[int]
@@ -23,5 +26,8 @@ class ChunkIndices(BaseModel):
 class TaskResponse(BaseModel):
     id: int
     priority: str
-    deadline: str
+    deadline: str  # Keep this as string since the ORM model likely provides `datetime`
     chunks: List[Chunk]
+
+    class Config:
+        from_attributes = True  # For Pydantic v2 compatibility

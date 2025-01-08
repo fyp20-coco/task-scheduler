@@ -67,6 +67,7 @@ def get_top_task_from_db(db: Session):
         "chunks": [
             {
                 "index": chunk.index,
+                "summary": chunk.summary if chunk.summary else "No summary provided",  # Ensure 'summary' exists
                 "description": chunk.description,
                 "start_time": chunk.start_time.isoformat(),  # Ensure datetime is formatted as string
                 "end_time": chunk.end_time.isoformat()

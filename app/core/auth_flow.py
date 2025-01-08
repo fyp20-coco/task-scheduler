@@ -1,6 +1,7 @@
 from google_auth_oauthlib.flow import Flow
-from app.core.config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI, GOOGLE_SCOPES
+from app.core.config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI
 
+GOOGLE_SCOPES=["https://www.googleapis.com/auth/calendar"]
 
 def get_google_flow():
     return Flow.from_client_config({
