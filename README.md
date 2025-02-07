@@ -53,6 +53,10 @@ GOOGLE_CLIENT_ID=your-client-id
 GOOGLE_CLIENT_SECRET=your-client-secret
 GOOGLE_REDIRECT_URI=http://localhost:8000/auth/redirect
 GOOGLE_SCOPES=https://www.googleapis.com/auth/calendar
+SECRET_KEY=your secret key  //openssl rand -hex 32
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+
 ```
 
 ## Installation

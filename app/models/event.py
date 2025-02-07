@@ -9,3 +9,5 @@ class Event(BaseModel):
     end: dict
     location: Optional[str] = None
     attendees: Optional[List[str]] = None
+
+    

@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel,EmailStr
 from datetime import datetime
 
 class Chunk(BaseModel):
@@ -31,3 +31,20 @@ class TaskResponse(BaseModel):
 
     class Config:
         from_attributes = True  # For Pydantic v2 compatibility
+
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    name: str
+    password: str
+    occupation: str
+    work_start_time: str
+    work_end_time: str
+    imageUrl: Optional[str] = None
+    phone: Optional[str] = None
+
+    
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
