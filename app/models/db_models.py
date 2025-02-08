@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 class TaskDB(Base):
-    __tablename__ = "tasks"
+    __tablename__ = "tasks"  # events
     id = Column(Integer, primary_key=True, index=True)
     priority = Column(Enum("HIGH", "MEDIUM", "LOW", name="priority_enum"), nullable=False)
     deadline = Column(DateTime, nullable=False)
