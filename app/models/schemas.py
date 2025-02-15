@@ -4,7 +4,6 @@ from datetime import datetime
 
 # CHUNK MODEL
 class Chunk(BaseModel):
-    index: int
     title: str  # Added `title` to match `ChunkDB`
     description: str
 
