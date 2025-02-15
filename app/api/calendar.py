@@ -4,11 +4,11 @@ from app.services.calendar_service import create_event, delete_event, get_event
 router = APIRouter()
 
 @router.post("/create")
-def create_event_endpoint(start_time: str, end_time: str, description: str, summary: str):
+def create_event_endpoint(start_time: str, end_time: str, description: str, title: str):
     """
     Creates a Google Calendar event.
     """
-    event_id = create_event(start_time, end_time, description, summary)
+    event_id = create_event(start_time, end_time, description, title)
     if not event_id:
         raise HTTPException(status_code=500, detail="Failed to create event.")
     return {"event_id": event_id}
@@ -29,3 +29,5 @@ def delete_event_endpoint(event_id: str):
     """
     delete_event(event_id)
     return {"message": f"Event {event_id} deleted successfully."}
+
+

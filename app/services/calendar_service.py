@@ -21,8 +21,9 @@ def get_service():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
+            creds_path = os.path.join(os.path.dirname(__file__), "credentials.json")
             flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials.json", SCOPES
+                creds_path, SCOPES
             )
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run.
@@ -33,10 +34,10 @@ def get_service():
     return build("calendar", "v3", credentials=creds)
 
 
-def create_event(start_time, end_time, description, summary, calendar_id="primary"):
+def create_event(start_time, end_time, description, title, calendar_id="primary"):
     service = get_service()
     event_data = {
-        "summary": summary,
+        "title": title,
         "description": description,
         "start": {"dateTime": start_time, "timeZone": "Asia/Colombo"},
         "end": {"dateTime": end_time, "timeZone": "Asia/Colombo"},
