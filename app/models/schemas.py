@@ -2,49 +2,57 @@ from typing import List, Optional
 from pydantic import BaseModel,EmailStr
 from datetime import datetime
 
+# CHUNK MODEL
 class Chunk(BaseModel):
-    index: Optional[int]
+    index: int
+    title: str  # Added `title` to match `ChunkDB`
     description: str
-    start_time: datetime
-    end_time: datetime
-    summary: str
 
     class Config:
-        from_attributes = True  # For Pydantic v2 compatibility
+        from_attributes = True  # Ensures compatibility with ORM
 
+
+# TASK MODEL
 class Task(BaseModel):
-    priority: str
+    priority: str  # Should match Enum("HIGH", "MEDIUM", "LOW")
     deadline: datetime
+    created_at: Optional[datetime] = None  # Matches TaskDB
     chunks: List[Chunk]
 
     class Config:
-        from_attributes = True  # For Pydantic v2 compatibility
+        from_attributes = True
 
+# CHUNK INDICES MODEL (For bulk updates)
 class ChunkIndices(BaseModel):
     chunk_indices: List[int]
 
+
+# TASK RESPONSE MODEL
 class TaskResponse(BaseModel):
     id: int
     priority: str
-    deadline: str  # Keep this as string since the ORM model likely provides `datetime`
+    deadline: datetime  # Changed to `datetime` to match DB
+    created_at: datetime
     chunks: List[Chunk]
 
     class Config:
-        from_attributes = True  # For Pydantic v2 compatibility
+        from_attributes = True
 
 
+# USER CREATION MODEL
 class UserCreate(BaseModel):
     email: EmailStr
     name: str
     password: str
     occupation: str
-    work_start_time: str
+    work_start_time: str  # Kept as string (Assuming formatted times)
     work_end_time: str
     imageUrl: Optional[str] = None
     phone: Optional[str] = None
 
     
 
+# AUTH TOKEN RESPONSE MODEL
 class Token(BaseModel):
     access_token: str
     token_type: str
