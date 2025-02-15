@@ -4,6 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.models.db_models import ChunkDB, TaskDB
 from app.models.schemas import Chunk, Task
 from sqlalchemy.sql import case
+from datetime import datetime
 
 
 def add_task_to_db(db: Session, task: Task):
@@ -58,21 +59,25 @@ def add_task_to_db(db: Session, task: Task):
 
 
 def get_top_task_from_db(db: Session):
-    """ Fetches the top-priority task from the database. """
+    """ Fetches the top-priority task with a deadline that is not in the past. """
     try:
         # Ensure proper ordering:
         # - High priority first
         # - Earliest deadline first
         # - Earliest created_at first (if priorities & deadlines are the same)
         priority_order = case(
-        (TaskDB.priority == "HIGH", 1),
-        (TaskDB.priority == "MEDIUM", 2),
-        (TaskDB.priority == "LOW", 3),
-        else_=4  # Default case
+            (TaskDB.priority == "HIGH", 1),
+            (TaskDB.priority == "MEDIUM", 2),
+            (TaskDB.priority == "LOW", 3),
+            else_=4  # Default case
         )
+
+        # Get the current time to compare deadlines
+        current_time = datetime.utcnow()
 
         task = (
             db.query(TaskDB)
+            .filter(TaskDB.deadline >= current_time)  # Ensure the task's deadline is not in the past
             .order_by(priority_order, TaskDB.deadline, TaskDB.created_at)
             .first()
         )
@@ -84,7 +89,7 @@ def get_top_task_from_db(db: Session):
             "id": task.id,
             "priority": task.priority,
             "deadline": task.deadline.isoformat(),
-            "created_at": task.created_at.isoformat(),  
+            "created_at": task.created_at.isoformat(),
             "chunks": [
                 {
                     "index": chunk.chunk_index,
