@@ -8,20 +8,26 @@ from pydantic import BaseModel
 
 router = APIRouter()
 
-class TaskInput(BaseModel):
-    user_input: str
-# @router.post("/add-task/", response_model=TaskResponse)
-# async def add_task(user_input:UserInput ,db: Session = Depends(get_db)):
-#     # task=generate_task_plan_wrapper(user_input)
-#     task = "task"
-#     return add_task_to_db(db, task)
-@router.post("/add-task/", response_model=str)
+# class TaskInput(BaseModel):
+#     user_input: str
+@router.post("/add-task/", response_model=TaskResponse)
 async def add_task(user_input:UserInput ,db: Session = Depends(get_db)):
     task=generate_task_plan_wrapper(user_input)
-    print("//////////////////////////////////////////////////////////////////////////////////////////")
-    print("task",task)
-    task = "task"
-    return task
+    return add_task_to_db(db, task)
+
+# @router.post("/add-task/", response_model=str)
+# async def add_task(user_input:UserInput ,db: Session = Depends(get_db)):
+#     task=generate_task_plan_wrapper(user_input)
+#     print("//////////////////////////////////////////////////////////////////////////////////////////")
+#     print("task",task.priority)
+#     print("//////////////////////////////////////////////////////////////////////////////////////////")
+#     print("chunks",task.chunks)
+#     print("//////////////////////////////////////////////////////////////////////////////////////////")
+#     print("deadline",task.deadline)
+#     print("//////////////////////////////////////////////////////////////////////////////////////////")
+#     print("type",task.type)
+#     task = "task"
+#     return task
 # @router.post("/add-task", response_model=str)
 # async def add_task(user_input:TaskInput ,db: Session = Depends(get_db)):
 #     # task=generate_task_plan_wrapper(user_input)
