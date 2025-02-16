@@ -26,6 +26,7 @@ class TaskDB(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     priority = Column(Enum("HIGH", "MEDIUM", "LOW", name="priority_enum"), nullable=False)
+    type = Column(Enum("WORK", "HOME","HOBBY", name="task_type_enum"), nullable=False)
     deadline = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=func.now())
 

@@ -11,7 +11,7 @@ def add_task_to_db(db: Session, task: Task):
     """ Adds a new task with chunks to the database. """
     try:
         # Create new task
-        new_task = TaskDB(priority=task.priority, deadline=task.deadline)
+        new_task = TaskDB(priority=task.priority, deadline=task.deadline, type=task.type)
         db.add(new_task)
         db.commit()
         db.refresh(new_task)  # Get task ID after commit
@@ -41,6 +41,7 @@ def add_task_to_db(db: Session, task: Task):
         return {
             "id": new_task.id,
             "priority": new_task.priority,
+            "type": new_task.type,
             "deadline": new_task.deadline.isoformat(),
             "created_at": new_task.created_at.isoformat(),  
             "chunks": [
@@ -88,6 +89,7 @@ def get_top_task_from_db(db: Session):
         return {
             "id": task.id,
             "priority": task.priority,
+            "type": task.type,
             "deadline": task.deadline.isoformat(),
             "created_at": task.created_at.isoformat(),
             "chunks": [

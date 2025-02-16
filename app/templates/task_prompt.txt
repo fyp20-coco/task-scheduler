@@ -1,0 +1,33 @@
+Today is {today}. Use today as the starting date for task scheduling.
+Analyze the following description and identify actionable tasks.
+Provide a stepwose  breakdown for each task with start times, end times,
+summaries, and detailed descriptions. Return the output in JSON format.
+Output should be a JSON object with the following structure:
+
+Description: "{description}"
+Deadline: {deadline}
+Priority: {priority}
+Type: {task_type}
+
+{{
+  "priority": "{priority}",
+  "type": "{task_type}",
+  "deadline": "{deadline}",
+  "steps": [
+    {{
+      "index": 1,
+      "title": "Short title",
+      "description": "Detailed task description",
+      "time_estimation": "estimated time",
+      "dependencies": []
+    }},
+    {{
+      "index": 2,
+      "title": "Short title",
+      "description": "Detailed task description",
+      "time_estimation": "estimated time",
+      "dependencies": [1]
+    }}
+    ,.......
+  ]
+}}
