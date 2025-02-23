@@ -4,7 +4,7 @@ from app.core.database import Base
 
 
 class User(Base):
-    __tablename__ = "users"  # Renamed table to plural form for consistency
+    __tablename__ = "user"  # Renamed table to plural form for consistency
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
@@ -31,7 +31,7 @@ class TaskDB(Base):
     created_at = Column(DateTime, default=func.now())
 
     # Foreign key to User model
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)  
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)  
     user = relationship("User", back_populates="tasks")
 
     # Relationship to chunks (A task should only be deleted if it has no chunks left)

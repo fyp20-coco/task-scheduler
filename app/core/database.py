@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Database configuration
-DATABASE_URL = "mysql://root:@localhost/task_db"
+DATABASE_URL = "mysql+pymysql://root:123456@localhost:3306/task_db"
 
 # Base model for SQLAlchemy
 Base = declarative_base()
