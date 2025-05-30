@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import RedirectResponse
 from fastapi import Query
 from fastapi.security import OAuth2PasswordRequestForm
-from app.services.auth import authenticate_user, create_access_token, add_user
+from app.services.auth import authenticate_user, create_access_token
 from app.models.schemas import Token, UserCreate
 from datetime import timedelta
 from sqlalchemy.orm import Session
@@ -44,8 +44,8 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/signin", response_model=Token)
-def signin(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(form_data.username, form_data.password)
+def signin(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
     access_token = create_access_token(data={"sub": user.email}, expires_delta=timedelta(minutes=30))
