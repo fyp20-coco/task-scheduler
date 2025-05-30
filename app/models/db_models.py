@@ -1,10 +1,11 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Text, func
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Text, Time, func
 from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 
+
 class User(Base):
-    __tablename__ = "users"  # Renamed table to plural form for consistency
+    __tablename__ = "user"  # Renamed table to plural form for consistency
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
@@ -31,7 +32,7 @@ class TaskDB(Base):
     created_at = Column(DateTime, default=func.now())
 
     # Foreign key to User model
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)  
+    user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"), nullable=False)  
     user = relationship("User", back_populates="tasks")
 
     # Relationship to chunks (A task should only be deleted if it has no chunks left)
@@ -46,6 +47,18 @@ class ChunkDB(Base):
     chunk_index = Column(Integer, nullable=False)
     title = Column(Text, nullable=False)
     description = Column(Text, nullable=False)  # Changed from String to Text for long descriptions
+    time_estimation = Column(Time, nullable=False)
 
     task = relationship("TaskDB", back_populates="chunks")
+    scheduled_chunks = relationship("ScheduledChunkDB", back_populates="chunk", cascade="all, delete-orphan", passive_deletes=True)
 
+
+class ScheduledChunkDB(Base):
+    __tablename__ = "scheduled_chunks"
+
+    event_id = Column(Integer, primary_key=True, index=True)
+    chunk_id = Column(Integer, ForeignKey("chunks.id", ondelete="CASCADE"), nullable=False)  
+    start_time = Column(DateTime, nullable=False)
+    end_time = Column(DateTime, nullable=False)
+
+    chunk = relationship("ChunkDB", back_populates="scheduled_chunks")

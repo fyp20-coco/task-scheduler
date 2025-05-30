@@ -1,7 +1,9 @@
 Today is {today}. Use today as the starting date for task scheduling.
 Analyze the following description and identify actionable tasks.
-Provide a stepwose  breakdown for each task with start times, end times,
-summaries, and detailed descriptions. Return the output in JSON format.
+Provide a stepwise  breakdown for each task with start times, end times,
+summaries, and detailed descriptions. 
+
+Return the output strictly in a JSON format (do not provide any additional formatting or commentary). Pay close attention to the "time_estimation" field: the value must be strictly formatted as HH:MM (e.g., if a task takes 2 hours, use "02:00").time_estimation should be given on 00:00 (HH:MM) format
 Output should be a JSON object with the following structure:
 
 Description: "{description}"
@@ -18,14 +20,14 @@ Type: {task_type}
       "index": 1,
       "title": "Short title",
       "description": "Detailed task description",
-      "time_estimation": "estimated time",
+      "time_estimation": "00:00", // strictly HH:MM format (e.g., 2 hours as "02:00")
       "dependencies": []
     }},
     {{
       "index": 2,
       "title": "Short title",
       "description": "Detailed task description",
-      "time_estimation": "estimated time",
+      "time_estimation": "00:00", // strictly HH:MM format (e.g., 2 hours as "02:00")
       "dependencies": [1]
     }}
     ,.......
