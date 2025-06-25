@@ -38,6 +38,7 @@ def add_task_to_db(db: Session, task: Task):
             last_index += 1 
 
             estimated_time = timedelta_to_str(chunk.time_estimation)
+            print(f"Adding chunk with estimated time: {estimated_time}")
 
         
             new_chunk = ChunkDB(
@@ -52,6 +53,7 @@ def add_task_to_db(db: Session, task: Task):
 
         db.bulk_save_objects(new_chunks)  # Efficient batch insert
         db.commit()
+        print("New chunks added to the database:", new_chunks)
 
         
         data={
@@ -70,10 +72,10 @@ def add_task_to_db(db: Session, task: Task):
                 for chunk in new_chunks
             ]
         }
-        start=datetime.utcnow()
-        end=new_task.deadline.isoformat()
+        # start=datetime.utcnow()
+        # end=new_task.deadline.isoformat()
         
-        get_scheduled_chunks(db,start,end)
+        # get_scheduled_chunks(db,start,end)
         
 
 

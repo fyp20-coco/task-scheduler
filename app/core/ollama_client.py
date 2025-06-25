@@ -37,6 +37,7 @@ def generate_task_plan(user_input, model_name) -> dict:
         priority=user_input.priority,
         task_type=user_input.type
     )
+    
 
     client = ollama.Client()
     retries = 0
@@ -53,6 +54,8 @@ def generate_task_plan(user_input, model_name) -> dict:
         )
 
         output = response.get('response', '')
+
+        print(f"Raw output from model: {output}")
 
         if validate_json(output):
             return TaskPlanResponse.parse_raw(output)  # Return valid JSON as a Python object

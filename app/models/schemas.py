@@ -95,7 +95,7 @@ class Chunk(BaseModel):
         from_attributes = True  # Ensures compatibility with ORM
 # TASK MODEL
 class Task(BaseModel):
-    id:int
+    id: Optional [int]
     priority: Priority  # Should match Enum("HIGH", "MEDIUM", "LOW")
     deadline: datetime
     type: TaskType 

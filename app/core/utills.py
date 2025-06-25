@@ -1,5 +1,5 @@
 from pydantic import ValidationError
-from sqlalchemy import select
+from sqlalchemy import desc, select
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.db_models import ChunkDB, ScheduledChunkDB, TaskDB

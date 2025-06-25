@@ -13,6 +13,7 @@ router = APIRouter()
 #     user_input: str
 @router.post("/add-task/", response_model=TaskResponse)
 async def add_task(user_input:UserInput ,db: Session = Depends(get_db)):
+    print("Received user input:", user_input)
     task=generate_task_plan_wrapper(user_input)
 
     

@@ -1,3 +1,4 @@
+from fastapi.utils import generate_unique_id
 from app.core.ollama_client import generate_task_plan
 from app.models.schemas import Task
 
@@ -10,13 +11,16 @@ models = [
 
 def generate_task_plan_wrapper(user_input, model_name=models[1]):
     try:
+        print("Generating task plan with model:", model_name)
         response = generate_task_plan(user_input, model_name)
 
         print("\nGenerated Task Plan:")
         print(response)
+        print(response.priority)
 
-        new_task = Task(priority=response.priority, deadline=response.deadline, type=response.type,chunks=response.steps)
+        new_task = Task(id=500,priority=response.priority, deadline=response.deadline, type=response.type,chunks=response.steps)
 
+        print("\nNew Task Created:", new_task)
         # # Save response to database
         # save_to_db(response)
         return new_task 
