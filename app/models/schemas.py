@@ -15,6 +15,9 @@ class Priority(str, Enum):
     LOW = "LOW"
 
 class Chunk(BaseModel):
+    id: Optional[int] = None
+    task_id: Optional[int] = None  
+    chunk_index: Optional[int] = None
     title: str
     description: str
     time_estimation: timedelta  # Use timedelta to store the time difference
@@ -100,6 +103,7 @@ class Task(BaseModel):
     deadline: datetime
     type: TaskType 
     created_at: Optional[datetime] = None  # Matches TaskDB
+    user_id: Optional[int] = None  # Add user_id field
     chunks: List[Chunk]
 
     class Config:

@@ -72,10 +72,10 @@ def add_task_to_db(db: Session, task: Task):
                 for chunk in new_chunks
             ]
         }
-        # start=datetime.utcnow()
-        # end=new_task.deadline.isoformat()
-        
-        # get_scheduled_chunks(db,start,end)
+        start=datetime.utcnow()
+        end=new_task.deadline.isoformat()
+        print("its ok until here")
+        get_scheduled_chunks(db,start,end)
         
 
 

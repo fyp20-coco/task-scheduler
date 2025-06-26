@@ -101,11 +101,12 @@ def get_event_timeframe(start, end, calendar_id="primary"):
         print("end",end)
         events_result = service.events().list(
             calendarId=calendar_id,
-            timeMin=start.isoformat(),
-            timeMax=end.isoformat(),
+            timeMin=start.isoformat() + 'Z' if start.tzinfo is None else start.isoformat(),
+            timeMax=end.isoformat() + 'Z' if end.tzinfo is None else end.isoformat(),
             singleEvents=True,
             orderBy="startTime",
         ).execute()
+        print("events_result",events_result)
 
         eventlist=events_result.get("items", [])
         formatted_events = []

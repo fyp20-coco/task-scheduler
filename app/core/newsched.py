@@ -539,7 +539,9 @@ def get_scheduled_chunks(db, start, end):
     """
     # Get all tasks and chunks from database
     tasks, chunks = get_chunks_and_tasks_with_scheduled_chunks(db)
+    print("\nRetrieved tasks and chunks from database:")
     tasks2, chunks2 = get_last_task_with_chunks(db)
+  
     
     # Combine all tasks and chunks
     tasks.extend(tasks2)
@@ -570,8 +572,11 @@ def get_scheduled_chunks(db, start, end):
         end = dateutil.parser.isoparse(end)
     
     events = get_event_timeframe(start, end)
+    print(f"\nRetrieved {len(events)} events from calendar service between {start} and {end}.")
     unavailable_timeslots = extract_unavailable_timeslots(events)
+    print(f"Unavailable timeslots extracted: {len(unavailable_timeslots)}")
     available_slots = get_available_timeslots(unavailable_timeslots, start, end)    # Update global timeslots for MCTS
+    print(f"Available time slots found: {len(available_slots)}")
     global timeslots
     timeslots = available_slots
     
@@ -582,6 +587,7 @@ def get_scheduled_chunks(db, start, end):
         chunks=valid_chunks,
         tasks_dict=tasks_dict
     )
+    print("\nInitial state created with unscheduled chunks and available time slots.")
     
     # Run MCTS algorithm
     final_state, final_score = mcts(initial_state, tasks_dict, iterations=2000)

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.db_models import ChunkDB, ScheduledChunkDB, TaskDB
 from app.models.schemas import Chunk, Priority, Task, TaskType
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 def get_chunks_and_tasks_with_scheduled_chunks(db: Session):
     # Fetch all tasks
@@ -21,10 +21,18 @@ def get_chunks_and_tasks_with_scheduled_chunks(db: Session):
     tasks = []
     chunks = []
     task_dict = {}
-    
+    print("Fetched tasks and chunks from the database.")
     for chunk_db, task_db in result:
         # Convert time_estimation to timedelta
-        if isinstance(chunk_db.time_estimation, datetime):
+        if isinstance(chunk_db.time_estimation, time):
+            # Convert time object to timedelta
+            time_estimation = timedelta(
+                hours=chunk_db.time_estimation.hour,
+                minutes=chunk_db.time_estimation.minute,
+                seconds=chunk_db.time_estimation.second
+            )
+        elif isinstance(chunk_db.time_estimation, datetime):
+            # Convert datetime object to timedelta
             time_estimation = timedelta(
                 hours=chunk_db.time_estimation.hour,
                 minutes=chunk_db.time_estimation.minute,
@@ -34,6 +42,7 @@ def get_chunks_and_tasks_with_scheduled_chunks(db: Session):
             # Assume time_estimation is a string like "30 minutes" or parse as needed
             time_estimation = chunk_db.time_estimation  # Validator will handle parsing
         
+        print(f"Processing chunk {chunk_db.id} for task {task_db.id} with time estimation: {time_estimation}")
         try:
             chunk = Chunk(
                 id=chunk_db.id,
@@ -87,12 +96,19 @@ def get_last_task_with_chunks(db_session: Session):
         
         if not last_task_db:
             return [], []  # Return empty lists instead of None
-        
-        # Convert chunks
+          # Convert chunks
         chunks = []
         for chunk_db in last_task_db.chunks:
             # Convert time_estimation to timedelta
-            if isinstance(chunk_db.time_estimation, datetime):
+            if isinstance(chunk_db.time_estimation, time):
+                # Convert time object to timedelta
+                time_estimation = timedelta(
+                    hours=chunk_db.time_estimation.hour,
+                    minutes=chunk_db.time_estimation.minute,
+                    seconds=chunk_db.time_estimation.second
+                )
+            elif isinstance(chunk_db.time_estimation, datetime):
+                # Convert datetime object to timedelta
                 time_estimation = timedelta(
                     hours=chunk_db.time_estimation.hour,
                     minutes=chunk_db.time_estimation.minute,
